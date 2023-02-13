@@ -1,0 +1,34 @@
+CAPI=2:
+
+name: AFRL:string:axis_string_to_axis_data:1.0.0
+description: Convert axis data in string format to raw axis data/dest/user.
+
+filesets:
+  src:
+    files:
+      - src/axis_string_to_axis_data.v : { file_type: verilogSource }
+  
+  tb:
+    files:
+      - tb/tb_axis.v  : { file_type: verilogSource }
+      - tb/in.txt     : { file_type: user, copyto: in.txt }
+    
+  dep:
+    depend:
+      - AFRL:utility:helper:1.0.0
+      
+  dep_tb:
+    depend:
+      - AFRL:simulation:axis_stimulator
+      - AFRL:simulation:clock_stimulator
+  
+targets:
+  default: &default
+    filesets: [src, dep]
+  
+  sim:
+    <<: *default
+    default_tool: icarus
+    filesets_append: [tb, dep_tb]
+    toplevel: tb_axis
+    
