@@ -35,9 +35,6 @@ module tb_axis;
   localparam USER_WIDTH = 4;
   localparam DEST_WIDTH = 4;
   
-  localparam CLK_PERIOD = 500;
-  localparam RST_PERIOD = 1000;
-  
   wire                      tb_dut_clk;
   wire                      tb_dut_rstn;
   wire                      tb_dut_valid;
@@ -47,6 +44,7 @@ module tb_axis;
   wire                      tb_dut_last;
   wire [USER_WIDTH-1:0]     tb_dut_user;
   wire [DEST_WIDTH-1:0]     tb_dut_dest;
+  wire                      tb_eof;
   
   wire                      tb_stim_clk;
   wire                      tb_stim_rstn;
@@ -56,10 +54,6 @@ module tb_axis;
   wire                      tb_stim_last;
   wire [USER_WIDTH-1:0]     tb_stim_user;
   wire [DEST_WIDTH-1:0]     tb_stim_dest;
-  
-  reg         tb_cnt_clk  = 0;
-  reg         tb_cnt_rstn = 0;
-  wire [8:0]  tb_cnt_data;
   
   // fst dump command
   initial begin
@@ -98,7 +92,8 @@ module tb_axis;
     .m_axis_tkeep(tb_stim_keep),
     .m_axis_tlast(tb_stim_last),
     .m_axis_tuser(tb_stim_user),
-    .m_axis_tdest(tb_stim_dest)
+    .m_axis_tdest(tb_stim_dest),
+    .eof(tb_eof)
   );
   
   axis_string_to_axis_data #(
@@ -147,7 +142,8 @@ module tb_axis;
     .s_axis_tkeep({BUS_WIDTH{1'b1}}),
     .s_axis_tlast(1'b0),
     .s_axis_tuser(tb_dut_user),
-    .s_axis_tdest(tb_dut_dest)
+    .s_axis_tdest(tb_dut_dest),
+    .eof(~tb_dut_valid & tb_eof)
   );
   
 endmodule

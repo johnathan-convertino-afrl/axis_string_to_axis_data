@@ -11,7 +11,7 @@ filesets:
   tb:
     files:
       - tb/tb_axis.v  : { file_type: verilogSource }
-      - tb/in.txt     : { file_type: user, copyto: in.txt }
+      - tb/in.txt     : { file_type: user, copyto: . }
     
   dep:
     depend:
@@ -26,7 +26,7 @@ targets:
   default: &default
     filesets: [src, dep]
   
-  sim:
+  sim: &sim
     <<: *default
     default_tool: icarus
     filesets_append: [tb, dep_tb]

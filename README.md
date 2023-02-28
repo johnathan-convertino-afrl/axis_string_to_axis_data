@@ -1,5 +1,5 @@
 # AXIS STRING TO AXIS DATA
-## Converts incoming axis string into axis data.
+### Converts incoming axis string into axis data.
 ---
 
    author: Jay Convertino   
@@ -12,8 +12,6 @@
    
 ---
 
-![rtl_img](./rtl.png)
-
 ### Dependencies
 #### Build
 
@@ -23,6 +21,7 @@
 
   - AFRL:simulation:axis_stimulator
   - AFRL:simulation:clock_stimulator
+  - AFRL:utility:sim_helper
 
 ### IP USAGE
 #### INSTRUCTIONS
@@ -61,3 +60,9 @@ to the ports specified by the prefix.
 
 * fusesoc_info.core created.
 * Simulation uses icarus to run data through the core.
+
+#### TARGETS
+
+* RUN WITH: (fusesoc run --target=sim VENDER:CORE:NAME:VERSION)
+  - default (for IP integration builds)
+  - sim
