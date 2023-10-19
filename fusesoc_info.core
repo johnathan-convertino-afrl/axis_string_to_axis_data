@@ -24,10 +24,12 @@ filesets:
   
 targets:
   default: &default
+    description: Default for IP intergration.
     filesets: [src, dep]
   
   sim: &sim
     <<: *default
+    description: Test text input to core, and view its data output in binary.
     default_tool: icarus
     filesets_append: [tb, dep_tb]
     toplevel: tb_axis
