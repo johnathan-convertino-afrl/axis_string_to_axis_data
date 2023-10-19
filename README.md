@@ -12,6 +12,13 @@
    
 ---
 
+### Version
+#### Current
+  - V1.0.0 - initial release
+
+#### Previous
+  - none
+
 ### Dependencies
 #### Build
 
