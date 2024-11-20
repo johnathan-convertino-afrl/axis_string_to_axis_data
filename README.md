@@ -1,5 +1,8 @@
 # AXIS STRING TO AXIS DATA
 ### Converts incoming axis string into axis data.
+
+![image](docs/manual/img/AFRL.png)
+
 ---
 
    author: Jay Convertino   
@@ -19,7 +22,13 @@
 #### Previous
   - none
 
-### Dependencies
+### DOCUMENTATION
+  For detailed usage information, please navigate to one of the following sources. They are the same, just in a different format.
+
+  - [axis_string_to_axis_data.pdf](docs/manual/axis_string_to_axis_data.pdf)
+  - [github page](https://johnathan-convertino-afrl.github.io/axis_string_to_axis_data/)
+
+### DEPENDENCIES
 #### Build
 
   - AFRL:utility:helper:1.0.0
@@ -30,14 +39,7 @@
   - AFRL:simulation:clock_stimulator
   - AFRL:utility:sim_helper
 
-### IP USAGE
-#### INSTRUCTIONS
-
-This core takes a incoming string, removes the delimiters, terminators, and prefixs.  
-After this all HEX value characters are converted into there binary values and output  
-to the ports specified by the prefix.
-
-#### PARAMETERS
+### PARAMETERS
 
 * DELIMITER   : DEFAULT : ";"   : break value between multple strings  
 * STRING_LEN  : DEFAULT : 4     : max lenth of string including delimiter  
@@ -63,12 +65,12 @@ to the ports specified by the prefix.
 * tb_axis.v
 * in.bin
   
-### fusesoc
+### FUSESOC
 
 * fusesoc_info.core created.
 * Simulation uses icarus to run data through the core.
 
-#### TARGETS
+#### Targets
 
 * RUN WITH: (fusesoc run --target=sim VENDER:CORE:NAME:VERSION)
   - default (for IP integration builds)

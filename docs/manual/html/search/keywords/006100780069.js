@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("axi",["Module","File"],[["axis_string_to_axis_data",,[[,,,,0,"File:axis_string_to_axis_data.v:axis_string_to_axis_data","SystemVerilogModule:axis_string_to_axis_data"],[,"axis_string_to_axis_data.v",,,1,"File:axis_string_to_axis_data.v:axis_string_to_axis_data.v"]]]]);

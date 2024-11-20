@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2021.2 (Released July 1, 2021) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>Architecture</TITLE>
+<META NAME="description" CONTENT="Architecture">
+<META NAME="keywords" CONTENT="html">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2021.2">
+
+<LINK REL="STYLESHEET" HREF="html.css">
+
+<LINK REL="next" HREF="axis_string_to_axis_data_node8.html">
+<LINK REL="previous" HREF="axis_string_to_axis_data_node2.html">
+<LINK REL="next" HREF="axis_string_to_axis_data_node8.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="axis_string_to_axis_data_node8.html">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A
+ HREF="html.html">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="axis_string_to_axis_data_node6.html">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A ID="tex2html53"
+  HREF="axis_string_to_axis_data_node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A
+ HREF="axis_string_to_axis_data_node8.html">Building</A>
+<B> Up:</B> <A
+ HREF="html.html">html</A>
+<B> Previous:</B> <A
+ HREF="axis_string_to_axis_data_node6.html">In a Project</A>
+ &nbsp; <B>  <A ID="tex2html54"
+  HREF="axis_string_to_axis_data_node1.html">Contents</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION00030000000000000000">
+Architecture</A>
+</H1>
+
+<P>
+The only module is the axis_string_to_axis_data module. It is listed below.
+
+<P>
+
+<UL>
+<LI><SPAN  CLASS="textbf">axis_string_to_axis_data </SPAN> Implement an algorithm to convert input string to data (see core for documentation).
+</LI>
+</UL>
+
+<P>
+The only always process converts the input string to data.
+
+<OL>
+<LI>If destination device is ready, clear oout registered output.
+</LI>
+<LI>if we have valid data, insert it into the buffer and increment count.
+  
+<OL>
+<LI>Counter down to last element? Clear and reset to full length.
+</LI>
+<LI>if we have the terminator and delimiter, process buffer.
+    
+<OL>
+<LI>Check for the type of prefix, based on that prefix look at each nibble and offset by its ASCII 0 to F to 0 to 15 binary.
+</LI>
+<LI>Check for set or clear keywork, if set output data. If clear, remove all data.
+    
+</LI>
+</OL>
+</LI>
+</OL>
+</LI>
+</OL>
+
+<P>
+Please see <A HREF="axis_string_to_axis_data_node18.html#Module_Documentation"><IMG  ALT="[*]" SRC="crossref.png"></A> for more information.
+
+<P>
+<BR><HR>
+
+</BODY>
+</HTML>

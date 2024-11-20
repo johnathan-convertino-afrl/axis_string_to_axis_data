@@ -1,64 +1,98 @@
 //******************************************************************************
-/// @FILE    axis_string_to_axis_data.v
-/// @AUTHOR  JAY CONVERTINO
-/// @DATE    2022.09.19
-/// @BRIEF   AXIS STRING TO AXIS DATA
-/// @DETAILS Take input string data and process it into tuser/tdata output.
-///
-/// @LICENSE MIT
-///  Copyright 2022 Jay Convertino
-///
-///  Permission is hereby granted, free of charge, to any person obtaining a copy
-///  of this software and associated documentation files (the "Software"), to 
-///  deal in the Software without restriction, including without limitation the
-///  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-///  sell copies of the Software, and to permit persons to whom the Software is 
-///  furnished to do so, subject to the following conditions:
-///
-///  The above copyright notice and this permission notice shall be included in 
-///  all copies or substantial portions of the Software.
-///
-///  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-///  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-///  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-///  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-///  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-///  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-///  IN THE SOFTWARE.
+// file:    axis_string_to_axis_data.v
+//
+// author:  JAY CONVERTINO
+//
+// date:    2022/09/19
+//
+// about:   Brief
+// Take input string data and process it into tuser/tdata output.
+//
+// license: License MIT
+// Copyright 2022 Jay Convertino
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
+//
 //******************************************************************************
 
 `timescale 1ns/100ps
 
-/// @brief axis string to axis data module
+/*
+ * Module: axis_string_to_axis_data
+ *
+ * Parse raw binary data into ASCII string output.
+ *
+ * Parameters:
+ *
+ *    DELIMITER   - break value between multple strings
+ *    TERMINATION - termination value of full string from serial port, byte only. (\n = 0A \r = 0D).
+ *    STRING_LEN  - max lenth of string including delimiter
+ *    MBUS_WIDTH  - bus width of master (data) output
+ *    USER_WIDTH  - user width of master bus, only in 4 bit nibbles, and at least 4 bits.
+ *    DEST_WIDTH  - dest width of master bus, only in 4 bit nibbles, and at least 4 bits.
+ *    PREFIX_LEN  - length of following prefix strings in bytes.
+ *    DATA_PREFIX - prefix for data hex strings
+ *    DEST_PREFIX - prefix for destination hex strings
+ *    USER_PREFIX - prefix for user hex strings
+ *    KEYWORD_LEN - length of the following keywords
+ *    SET_KEYWORD - keyword to output data over tdata,tuser,tdest on master interface.
+ *    CLR_KEYWORD - keyword to clear output data and buffers of master interface.
+ *
+ * Ports:
+ *
+ *   aclk           - Clock for AXIS
+ *   arstn          - Negative reset for AXIS
+ *   m_axis_tdata   - Output data
+ *   m_axis_tvalid  - When active high the output data is valid
+ *   m_axis_tuser   - Output user data
+ *   m_axis_tdest   - Output destination data
+ *   m_axis_tready  - When set active high the output device is ready for data.
+ *   s_axis_tdata   - Input string data
+ *   s_axis_tvalid  - When set active high the input data is valid
+ *   s_axis_tready  - When active high the device is ready for input data.
+ */
 module axis_string_to_axis_data #(
-    parameter DELIMITER   = ";",        ///< break value between multple strings
-    parameter TERMINATION = "\n",       ///< termination value of full string from serial port, byte only. (\n = 0A \r = 0D).
-    parameter STRING_LEN  = 4,          ///< max lenth of string including delimiter
-    parameter MBUS_WIDTH  = 1,          ///< bus width of master (data) output
-    parameter USER_WIDTH  = 4,          ///< user width of master bus, only in 4 bit nibbles, and at least 4 bits.
-    parameter DEST_WIDTH  = 4,          ///< dest width of master bus, only in 4 bit nibbles, and at least 4 bits.
-    parameter PREFIX_LEN  = 1,          ///< length of following prefix strings in bytes.
-    parameter DATA_PREFIX = "#",        ///< prefix for data hex strings
-    parameter DEST_PREFIX = "&",        ///< prefix for destination hex strings
-    parameter USER_PREFIX = "*",        ///< prefix for user hex strings
-    parameter KEYWORD_LEN = 3,          ///< length of the following keywords
-    parameter SET_KEYWORD = "set",      ///< keyword to output data over tdata,tuser,tdest on master interface.
-    parameter CLR_KEYWORD = "clr"       ///< keyword to clear output data and buffers of master interface.
+    parameter DELIMITER   = ";",
+    parameter TERMINATION = "\n",
+    parameter STRING_LEN  = 4,
+    parameter MBUS_WIDTH  = 1,
+    parameter USER_WIDTH  = 4,
+    parameter DEST_WIDTH  = 4,
+    parameter PREFIX_LEN  = 1,
+    parameter DATA_PREFIX = "#",
+    parameter DEST_PREFIX = "&",
+    parameter USER_PREFIX = "*",
+    parameter KEYWORD_LEN = 3,
+    parameter SET_KEYWORD = "set",
+    parameter CLR_KEYWORD = "clr"
   )
   (
-    //axi streaming clock and reset.
-    input aclk,
-    input arstn,
-    //master output axis
-    output reg [(MBUS_WIDTH*8)-1:0] m_axis_tdata,
-    output reg                      m_axis_tvalid,
-    output reg [USER_WIDTH-1:0]     m_axis_tuser,
-    output reg [DEST_WIDTH-1:0]     m_axis_tdest,
-    input                           m_axis_tready,
-    //slave input axis
-    input  [7:0]  s_axis_tdata,
-    input         s_axis_tvalid,
-    output        s_axis_tready
+    input                       aclk,
+    input                       arstn,
+    output [(MBUS_WIDTH*8)-1:0] m_axis_tdata,
+    output                      m_axis_tvalid,
+    output [USER_WIDTH-1:0]     m_axis_tuser,
+    output [DEST_WIDTH-1:0]     m_axis_tdest,
+    input                       m_axis_tready,
+    input  [7:0]                s_axis_tdata,
+    input                       s_axis_tvalid,
+    output                      s_axis_tready
   );
   
   `include "util_helper_math.vh"
@@ -66,6 +100,10 @@ module axis_string_to_axis_data #(
   reg [(MBUS_WIDTH*8)-1:0]  r_m_axis_tdata;
   reg [USER_WIDTH-1:0]      r_m_axis_tuser;
   reg [DEST_WIDTH-1:0]      r_m_axis_tdest;
+  reg                       r_m_axis_tvalid;
+  reg [(MBUS_WIDTH*8)-1:0]  rr_m_axis_tdata;
+  reg [USER_WIDTH-1:0]      rr_m_axis_tuser;
+  reg [DEST_WIDTH-1:0]      rr_m_axis_tdest;
   
   reg [clogb2(STRING_LEN):0] counter;
   
@@ -76,13 +114,19 @@ module axis_string_to_axis_data #(
   // ready if next core is ready.
   assign s_axis_tready = m_axis_tready;
 
+  assign m_axis_tdata   = rr_m_axis_tdata;
+  assign m_axis_tvalid  = r_m_axis_tvalid;
+  assign m_axis_tuser   = rr_m_axis_tuser;
+  assign m_axis_tdest   = rr_m_axis_tdest;
+
+  // process string data into raw data
   always @(posedge aclk)
   begin
     if(arstn == 1'b0) begin
-      m_axis_tdata  <= 0;
-      m_axis_tvalid <= 0;
-      m_axis_tuser  <= 0;
-      m_axis_tdest  <= 0;
+      rr_m_axis_tdata  <= 0;
+      r_m_axis_tvalid  <= 0;
+      rr_m_axis_tuser  <= 0;
+      rr_m_axis_tdest  <= 0;
       
       r_m_axis_tdata <= 0;
       r_m_axis_tuser <= 0;
@@ -93,10 +137,10 @@ module axis_string_to_axis_data #(
       char_buffer <= 0;
     end else begin
       if(m_axis_tready == 1'b1) begin
-        m_axis_tdata  <= 0;
-        m_axis_tvalid <= 0;
-        m_axis_tuser  <= 0;
-        m_axis_tdest  <= 0;
+        rr_m_axis_tdata  <= 0;
+        r_m_axis_tvalid  <= 0;
+        rr_m_axis_tuser  <= 0;
+        rr_m_axis_tdest  <= 0;
       end
       
       if(s_axis_tvalid == 1'b1) begin 
@@ -134,10 +178,10 @@ module axis_string_to_axis_data #(
           
           case(char_buffer[8*STRING_LEN-1 -:8*KEYWORD_LEN])
             SET_KEYWORD : begin
-              m_axis_tdata  <= r_m_axis_tdata;
-              m_axis_tvalid <= 1'b1;
-              m_axis_tuser  <= r_m_axis_tuser;
-              m_axis_tdest  <= r_m_axis_tdest;
+              rr_m_axis_tdata  <= r_m_axis_tdata;
+              r_m_axis_tvalid  <= 1'b1;
+              rr_m_axis_tuser  <= r_m_axis_tuser;
+              rr_m_axis_tdest  <= r_m_axis_tdest;
             end
             CLR_KEYWORD : begin
               r_m_axis_tdata <= 0;
