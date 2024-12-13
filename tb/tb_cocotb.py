@@ -97,8 +97,9 @@ async def reset_dut(dut):
   dut.arstn.value = 1
 
 # Function: conversion_test
-# Coroutine that is identified as a test routine. This routine tests for correct output of strings
-# by comparing to a python genrated version.
+# Coroutine that is identified as a test routine. This routine tests for correct output of data
+# from string input. Core creates the expected output data, generates a string from that and then
+# compares the input vs output raw data.
 #
 # Parameters:
 #   dut - Device under test passed from cocotb.
@@ -113,34 +114,33 @@ async def conversion_test(dut):
     await reset_dut(dut)
 
     for x in range(0, 256):
-        output_string = ""
-        rx_frames = []
+        data = x.to_bytes(length = 1, byteorder='little')
+        tx_frame_org = AxiStreamFrame(data, tdest=x%(2**dut.m_axis_tdest.value.n_bits), tuser=(x-255)%(2**dut.m_axis_tuser.value.n_bits), tx_complete=Event())
 
-        data = x.to_bytes(length = 1, byteorder='little') * dut.SBUS_WIDTH.value
-        tx_frame = AxiStreamFrame(data, tdest=x%(2**dut.s_axis_tdest.value.n_bits), tuser=(x-255)%(2**dut.s_axis_tuser.value.n_bits), tx_complete=Event())
+        tx_frame = AxiStreamFrame(bytes(create_string(dut, tx_frame_org), 'utf-8'), tx_complete=Event())
 
         await axis_source.send(tx_frame)
         await tx_frame.tx_complete.wait()
 
-        await RisingEdge(dut.m_axis_tvalid)
+        set_frame = AxiStreamFrame(bytes(f'{dut.SET_KEYWORD.value.decode()}{dut.TERMINATION.value.decode()}', 'utf-8'), tx_complete=Event())
 
-        while dut.m_axis_tvalid.value.integer == 1:
-          rx_frame = await axis_sink.recv()
-          rx_frames.append(rx_frame)
-          await RisingEdge(dut.aclk)
+        await axis_source.send(set_frame)
+        await set_frame.tx_complete.wait()
 
-        for rx_frame in rx_frames:
-          output_string += rx_frame.tdata.decode()
+        rx_frame = await axis_sink.recv()
 
-        assert output_string == create_string(dut, tx_frame), "Python generator string does not equal core string"
+        assert rx_frame.tdata == tx_frame_org.tdata, "Input tdata does not match output"
+        assert rx_frame.tdest == tx_frame_org.tdest, "Input tdest does not match output"
+        assert rx_frame.tuser == tx_frame_org.tuser, "Input tuser does not match output"
 
     await RisingEdge(dut.aclk)
 
     assert dut.s_axis_tready.value[0] == 1, "tready is not 1!"
 
 # Function: conversion_test_random_ready
-# Coroutine that is identified as a test routine. This routine tests for correct output of strings
-# by comparing to a python genrated version, with ready randomized.
+# Coroutine that is identified as a test routine. This routine tests for correct output of data
+# from string input. Core creates the expected output data, generates a string from that and then
+# compares the input vs output raw data.
 #
 # Parameters:
 #   dut - Device under test passed from cocotb.
@@ -157,26 +157,24 @@ async def conversion_test_random_ready(dut):
     await reset_dut(dut)
 
     for x in range(0, 256):
-        output_string = ""
-        rx_frames = []
+        data = x.to_bytes(length = 1, byteorder='little')
+        tx_frame_org = AxiStreamFrame(data, tdest=x%(2**dut.m_axis_tdest.value.n_bits), tuser=(x-255)%(2**dut.m_axis_tuser.value.n_bits), tx_complete=Event())
 
-        data = x.to_bytes(length = 1, byteorder='little') * dut.SBUS_WIDTH.value
-        tx_frame = AxiStreamFrame(data, tdest=x%(2**dut.s_axis_tdest.value.n_bits), tuser=(x-255)%(2**dut.s_axis_tuser.value.n_bits), tx_complete=Event())
+        tx_frame = AxiStreamFrame(bytes(create_string(dut, tx_frame_org), 'utf-8'), tx_complete=Event())
 
         await axis_source.send(tx_frame)
         await tx_frame.tx_complete.wait()
 
-        await RisingEdge(dut.m_axis_tvalid)
+        set_frame = AxiStreamFrame(bytes(f'{dut.SET_KEYWORD.value.decode()}{dut.TERMINATION.value.decode()}', 'utf-8'), tx_complete=Event())
 
-        while dut.m_axis_tvalid.value.integer == 1:
-          rx_frame = await axis_sink.recv()
-          rx_frames.append(rx_frame)
-          await RisingEdge(dut.aclk)
+        await axis_source.send(set_frame)
+        await set_frame.tx_complete.wait()
 
-        for rx_frame in rx_frames:
-          output_string += rx_frame.tdata.decode()
+        rx_frame = await axis_sink.recv()
 
-        assert output_string == create_string(dut, tx_frame), "Python generator string does not equal core string"
+        assert rx_frame.tdata == tx_frame_org.tdata, "Input tdata does not match output"
+        assert rx_frame.tdest == tx_frame_org.tdest, "Input tdest does not match output"
+        assert rx_frame.tuser == tx_frame_org.tuser, "Input tuser does not match output"
 
     axis_sink.clear_pause_generator()
 

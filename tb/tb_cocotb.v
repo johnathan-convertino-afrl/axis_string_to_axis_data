@@ -126,16 +126,16 @@ module tb_cocotb #(
     .SET_KEYWORD(SET_KEYWORD),
     .CLR_KEYWORD(CLR_KEYWORD)
   ) dut (
-    .aclk(tb_dut_clk),
-    .arstn(tb_dut_rstn),
-    .m_axis_tdata(tb_dut_data),
-    .m_axis_tvalid(tb_dut_valid),
-    .m_axis_tuser(tb_dut_user),
-    .m_axis_tdest(tb_dut_dest),
-    .m_axis_tready(tb_dut_ready),
-    .s_axis_tdata(tb_stim_data),
-    .s_axis_tvalid(tb_stim_valid),
-    .s_axis_tready(tb_stim_ready)
+    .aclk(aclk),
+    .arstn(arstn),
+    .m_axis_tdata(m_axis_tdata),
+    .m_axis_tvalid(m_axis_tvalid),
+    .m_axis_tuser(m_axis_tuser),
+    .m_axis_tdest(m_axis_tdest),
+    .m_axis_tready(m_axis_tready),
+    .s_axis_tdata(s_axis_tdata),
+    .s_axis_tvalid(s_axis_tvalid),
+    .s_axis_tready(s_axis_tready)
   );
   
 endmodule
