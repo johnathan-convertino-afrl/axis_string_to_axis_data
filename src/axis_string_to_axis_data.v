@@ -143,7 +143,7 @@ module axis_string_to_axis_data #(
         rr_m_axis_tdest  <= 0;
       end
       
-      if(s_axis_tvalid == 1'b1) begin 
+      if(s_axis_tvalid == 1'b1 && m_axis_tready == 1'b1) begin
         char_buffer[8*counter-1 -:8] <= s_axis_tdata;
         
         counter <= counter - 1;

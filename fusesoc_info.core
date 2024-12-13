@@ -1,6 +1,6 @@
 CAPI=2:
 
-name: AFRL:string:axis_string_to_axis_data:1.0.0
+name: AFRL:string:axis_string_to_axis_data:1.0.1
 description: Convert axis data in string format to raw axis data/dest/user.
 
 filesets:
@@ -53,13 +53,17 @@ targets:
     parameters:
       - DELIMITER
       - TERMINATION
-      - SBUS_WIDTH
+      - STRING_LEN
+      - MBUS_WIDTH
       - USER_WIDTH
       - DEST_WIDTH
       - PREFIX_LEN
       - DATA_PREFIX
       - DEST_PREFIX
       - USER_PREFIX
+      - KEYWORD_LEN
+      - SET_KEYWORD
+      - CLR_KEYWORD
 
 parameters:
   DELIMITER:
@@ -74,10 +78,16 @@ parameters:
     description : termination value of full string from serial port, byte only. (\n = 0A \r = 0D).
     paramtype   : vlogparam
 
-  SBUS_WIDTH:
+  STRING_LEN:
+    datatype    : int
+    default     : 4
+    description : max lenth of string including delimiter
+    paramtype   : vlogparam
+
+  MBUS_WIDTH:
     datatype    : int
     default     : 1
-    description : bus width of slave (data) input
+    description : bus width of master (data) output
     paramtype   : vlogparam
 
   USER_WIDTH:
@@ -113,5 +123,23 @@ parameters:
   USER_PREFIX:
     datatype    : str
     default     : "*"
+    description : prefix for user hex strings
+    paramtype   : vlogparam
+
+  KEYWORD_LEN:
+    datatype    : int
+    default     : 3
+    description : length of following prefix strings.
+    paramtype   : vlogparam
+
+  SET_KEYWORD:
+    datatype    : str
+    default     : "set"
+    description : prefix for destination hex strings
+    paramtype   : vlogparam
+
+  CLR_KEYWORD:
+    datatype    : str
+    default     : "clr"
     description : prefix for user hex strings
     paramtype   : vlogparam
