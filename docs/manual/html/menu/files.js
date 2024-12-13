@@ -1,1 +1,1 @@
-﻿NDMenu.OnSectionLoaded("files.js",[[1,"axis_string_to_axis_data.v"]]);
+﻿NDMenu.OnSectionLoaded("files.js",[[2,"axis_string_to_axis_data","File:",[[1,"axis_string_to_axis_data.v"]]],[2,"axis_string_to_axis_data_test_bench","File2:",[[1,"tb_axis.v"],[1,"tb_cocotb.py"],[1,"tb_cocotb.v"]]]]);

@@ -2,7 +2,7 @@
 # Associate internals original text with physical files.
 
 
-$key = q/Module_Documentation/;
+$key = q/Code_Documentation/;
 $ref_files{$key} = "$dir".q|axis_string_to_axis_data_node18.html|; 
 $noresave{$key} = "$nosave";
 

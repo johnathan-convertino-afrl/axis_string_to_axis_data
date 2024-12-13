@@ -36,7 +36,7 @@
 /*
  * Module: axis_string_to_axis_data
  *
- * Parse raw binary data into ASCII string output.
+ * Convert string data to raw binary data for axis bus.
  *
  * Parameters:
  *
