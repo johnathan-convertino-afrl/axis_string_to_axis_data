@@ -174,6 +174,8 @@ module axis_string_to_axis_data #(
                 r_m_axis_tuser[4*(index-(STRING_LEN-PREFIX_LEN-USER_WIDTH/4))-1 -:4] <= char_buffer[8*index-1 -:8] - ((char_buffer[8*index-1 -:8] - 48) < 10 ? 48 : 55);
               end
             end
+            default: begin
+            end
           endcase
           
           case(char_buffer[8*STRING_LEN-1 -:8*KEYWORD_LEN])
@@ -187,6 +189,8 @@ module axis_string_to_axis_data #(
               r_m_axis_tdata <= 0;
               r_m_axis_tuser <= 0;
               r_m_axis_tdest <= 0;
+            end
+            default: begin
             end
           endcase
         end

@@ -28,17 +28,6 @@
   - [axis_string_to_axis_data.pdf](docs/manual/axis_string_to_axis_data.pdf)
   - [github page](https://johnathan-convertino-afrl.github.io/axis_string_to_axis_data/)
 
-### DEPENDENCIES
-#### Build
-
-  - AFRL:utility:helper:1.0.0
-  
-#### Simulation
-
-  - AFRL:simulation:axis_stimulator
-  - AFRL:simulation:clock_stimulator
-  - AFRL:utility:sim_helper
-
 ### PARAMETERS
 
 * DELIMITER   : DEFAULT : ";"   : break value between multple strings  
@@ -63,7 +52,8 @@
 #### TB
 
 * tb_axis.v
-* in.bin
+* in.txt
+* tb_cocotb
   
 ### FUSESOC
 
@@ -74,4 +64,6 @@
 
 * RUN WITH: (fusesoc run --target=sim VENDER:CORE:NAME:VERSION)
   - default (for IP integration builds)
+  - lint
   - sim
+  - sim_cocotb
