@@ -66,6 +66,7 @@
  *   s_axis_tdata   - Input string data
  *   s_axis_tvalid  - When set active high the input data is valid
  *   s_axis_tready  - When active high the device is ready for input data.
+ *
  */
 module axis_string_to_axis_data #(
     parameter DELIMITER   = ";",

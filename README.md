@@ -5,14 +5,19 @@
 
 ---
 
-   author: Jay Convertino   
+  author: Jay Convertino   
+  
+  date: 2023.01.01  
+  
+  details: Converts incoming axis string into axis data..  
+  
+  license: MIT   
    
-   date: 2023.01.01  
-   
-   details: Converts incoming axis string into axis data..  
-   
-   license: MIT   
-   
+  Actions:  
+
+  [![Lint Status](../../actions/workflows/lint.yml/badge.svg)](../../actions)  
+  [![Manual Status](../../actions/workflows/manual.yml/badge.svg)](../../actions)  
+  
 ---
 
 ### Version
