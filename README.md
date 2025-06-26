@@ -1,5 +1,6 @@
 # AXIS STRING TO AXIS DATA
 ### Converts incoming axis string into axis data.
+---
 
 ![image](docs/manual/img/AFRL.png)
 
